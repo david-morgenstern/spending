@@ -1,3 +1,4 @@
 from django.contrib import admin
+from otp.models import CustomUser
 
-# Register your models here.
+admin.site.register(CustomUser)
