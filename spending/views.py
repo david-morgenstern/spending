@@ -4,14 +4,14 @@ from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from spending.cleaner.input_cleaner import InputCleaner
+from .utils import otp_clean_csv
 from .operations import Operations
 
 
 class DashboardView(APIView):
     def get(self, request):
         csv_files = ['data/1.csv']
-        result = InputCleaner.otp_csv_to_dataframe(csv_files)
+        result = otp_clean_csv(csv_files)
         parsed = json.loads(result.to_json(date_format='iso', orient='index'))
 
         ops = Operations(result)
@@ -25,7 +25,7 @@ class DashboardView(APIView):
 
 def home(request):
     csv_files = ['data/1.csv']
-    result = InputCleaner.otp_csv_to_dataframe(csv_files)
+    result = otp_clean_csv(csv_files)
     parsed = json.loads(result.to_json(date_format='iso'))
 
     ops = Operations(result)

@@ -1,5 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
@@ -49,4 +50,23 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return str(self.email)
 
+
+class Transaction(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_spending')
+    amount = models.IntegerField()
+    currency = models.CharField(max_length=5)
+    target = models.CharField(max_length=150)
+    comment = models.CharField(max_length=255)
+    type_of_payment = models.CharField(max_length=150)
+    date = models.DateField()
+
+    def __str__(self):
+        return f"tr: {self.id}"
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=[
+                'user', 'amount', 'currency', 'target', 'comment', 'type_of_payment', 'date'
+            ], name='no_duplicate_transaction_constraint')
+        ]
 

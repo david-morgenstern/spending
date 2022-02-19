@@ -1,4 +1,5 @@
 from django.contrib import admin
-from spending.models import CustomUser
+from .models import CustomUser, Transaction
 
 admin.site.register(CustomUser)
+admin.site.register(Transaction)
