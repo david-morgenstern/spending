@@ -4,20 +4,20 @@ from rest_framework import serializers
 from .models import Transaction
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    transactions = serializers.ReadOnlyField(source='get_transactions')
+    user = serializers.HyperlinkedIdentityField(view_name="customuser-detail")
+
     class Meta:
         model = get_user_model()
-        fields = ['email', 'id']
+        fields = ['id', 'email', 'user', 'transactions']
 
 
 class TransactionSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedRelatedField(view_name="user-detail", read_only=True)
-    user_id = serializers.SerializerMethodField('custom_user_id')
-
-    @staticmethod
-    def custom_user_id(transaction):
-        return transaction.user.id
+    url = serializers.HyperlinkedRelatedField(lookup_field='slug', view_name="transaction-detail", read_only=True)
+    slug = serializers.HyperlinkedIdentityField(lookup_field='slug', view_name="transaction-detail", read_only=True)
 
     class Meta:
         model = Transaction
         fields = '__all__'
+

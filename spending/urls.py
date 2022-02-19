@@ -25,5 +25,6 @@ urlpatterns = [
     path('users/<int:pk>/', user_detail, name='customuser-detail'),
 
     path("transactions/", transaction_list, name='transaction-list'),
-    path("transactions/<int:pk>/", transaction_detail, name='transaction-detail'),
+    # path("transactions/<int:pk>/", transaction_detail, name='transaction-detail'),
+    path("transactions/<slug:slug>/", transaction_detail, name='transaction-detail'),
 ]

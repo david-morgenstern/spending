@@ -1,7 +1,10 @@
+import uuid
+
 from django.contrib.auth.base_user import BaseUserManager
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.template.defaultfilters import slugify
 from django.utils.translation import gettext_lazy as _
 
 
@@ -47,6 +50,10 @@ class CustomUser(AbstractUser):
 
     objects = UserManager()
 
+    @property
+    def get_transactions(self):
+        return Transaction.objects.filter(user=self).values()
+
     def __str__(self):
         return str(self.email)
 
@@ -59,6 +66,14 @@ class Transaction(models.Model):
     comment = models.CharField(max_length=255)
     type_of_payment = models.CharField(max_length=150)
     date = models.DateField()
+    slug = models.SlugField(unique=True, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(f'{uuid.uuid1().hex}')
+        super(Transaction, self).save(*args, **kwargs)
+
+    def get_self(self):
+        return Transaction.objects.filter(slug=self.slug).values()
 
     def __str__(self):
         return f"tr: {self.id}"

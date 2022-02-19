@@ -11,6 +11,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class TransactionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TransactionSerializer
+    lookup_field = 'slug'
 
     def get_queryset(self):
         user = self.request.user
