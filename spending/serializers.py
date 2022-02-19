@@ -14,8 +14,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class TransactionSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedRelatedField(lookup_field='slug', view_name="transaction-detail", read_only=True)
-    slug = serializers.HyperlinkedIdentityField(lookup_field='slug', view_name="transaction-detail", read_only=True)
+    url = serializers.HyperlinkedIdentityField(lookup_field='slug', view_name="transaction-detail", read_only=True)
 
     class Meta:
         model = Transaction
